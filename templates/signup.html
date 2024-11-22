@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-sm-6 mt-4">
+        <h2>Register</h2>
+        <form action="/register" method="POST">
+            <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
+            </div>
+            
+            <div class="form-group">
+            <label for="pwd">Password:</label>
+            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password">
+            </div>
+
+            <div class="form-group">
+                <label for="genres">Preferred Genres:</label>
+                <div class="checkbox-container">
+                    {% for genre in [
+                        "Action", "Adventure", "Animation", "Comedy", "Crime",
+                        "Documentary", "Drama", "Family", "Fantasy", "History",
+                        "Horror", "Music", "Mystery", "Romance", "Science Fiction",
+                        "TV Movie", "Thriller", "War", "Western"
+                    ] %}
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="genres" value="{{ genre }}">
+                        <span class="checkmark"></span>
+                        {{ genre }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-dark">Register</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

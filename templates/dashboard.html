@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-sm-8">
+        <h3>Top Recommendations:</h3>
+        <div class="row">
+            {% for image_url, show_id in top_image_urls %}
+                <div class="col-sm-4 mb-4">
+                    <form action="/remove_show" method="POST" onsubmit="showLoading(); return confirm('Do you want to watch this show?');">
+                        <input type="hidden" name="show_id" value="{{ show_id }}">
+                        <button type="submit" style="border: none; background: none;">
+                            <img src="{{ image_url }}" alt="Recommended Show" class="img-fluid custom-img">
+                        </button>
+                        <h5 class="text-center mt-2">{{ df.iloc[show_id]['Title'] }}</h5>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if watch_again %}
+        <h3 class="mt-5">Watch Again:</h3>
+        <div class="row">
+            {% for image_url, show_id in watch_again %}
+                <div class="col-sm-4 mb-4">
+                    <form action="/remove_show" method="POST" onsubmit="showLoading(); return confirm('Do you want to watch this show again?');">
+                        <input type="hidden" name="show_id" value="{{ show_id }}">
+                        <button type="submit" style="border: none; background: none;">
+                            <img src="{{ image_url }}" alt="Watch Again Show" class="img-fluid custom-img">
+                        </button>
+                        <h5 class="text-center mt-2">{{ df.iloc[show_id]['Title'] }}</h5>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row justify-content-center mt-3">
+    <div class="col-sm-8 text-center">
+        <form action="/not_interested" method="POST" onsubmit="showLoading()">
+            <button type="submit" class="btn btn-danger">Not Interested?</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

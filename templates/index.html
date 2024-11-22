@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="hero-container">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h2>Welcome to the Watch<span style="color: var(--secondary)">AI</span></h2>
+        <p>Nothing to watch? <span style="color: var(--primary)">Find Your Next Favorite Movie</span></p>
+        <div class="hero-buttons">
+            <a href="/login" class="hero-btn">Login</a>
+            <a href="/register" class="hero-btn">Sign Up</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
