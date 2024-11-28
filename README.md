@@ -28,7 +28,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/WatchAI.git
+   git clone https://github.com/Akkki28/WatchAI/tree/main
    cd WatchAI
    ```
 
