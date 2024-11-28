@@ -8,7 +8,7 @@
 
 - **Personalized Recommendations**: Delivers customized suggestions based on user preferences.
 - **Real-time Updates**: Adapts the recommendations instantly upon user interactions.
-- **Deep Reinforcement Learning**: Utilizes cutting-edge DRL techniques to improve recommendation accuracy.
+- **Deep Reinforcement Learning**: Utilizes DeepLinUCB to improve recommendation accuracy.
 - **User Feedback Integration**: Continuously learns from user choices to refine suggestions.
 
 ---
@@ -18,7 +18,6 @@
 - **Reinforcement Learning Frameworks**: PyTorch
 - **Frontend**: HTML, CSS
 - **Backend**: Flask
-- 
 ---
 
 ## 📦 Installation and Setup
