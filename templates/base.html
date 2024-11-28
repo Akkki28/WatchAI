@@ -62,7 +62,6 @@
         document.getElementById('loadingOverlay').style.display = 'none';
     }
 
-    // Add event listener to show loading on navigation
     document.addEventListener('click', function(e) {
         if (e.target.tagName === 'A' || 
             (e.target.tagName === 'BUTTON' && e.target.type === 'submit')) {
@@ -70,7 +69,6 @@
         }
     });
 
-    // Hide loading when page is fully loaded
     window.addEventListener('load', hideLoading);
     </script>
 </body>
