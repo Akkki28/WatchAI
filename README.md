@@ -1,6 +1,6 @@
 # WatchAI 🎥🤖
 
-**WatchAI** is an intelligent recommendation system that leverages **Deep Reinforcement Learning (DRL)** to provide personalized content recommendations. It dynamically updates suggestions based on user interactions such as clicks or the "Not Interested" button, ensuring a tailored user experience.
+**WatchAI** is an intelligent recommendation system that utilizes **Deep Reinforcement Learning (DRL)** to provide personalized content recommendations. It dynamically updates suggestions based on user interactions such as clicks or the "Not Interested" button, ensuring a tailored user experience.
 
 ---
 
