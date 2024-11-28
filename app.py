@@ -234,18 +234,13 @@ def dashboard():
         if not user:
             return redirect('/login')
             
-        # Get watched shows
         watched_shows = json.loads(user.watched_shows)
-        # Initialize empty watch_again list
         watch_again = []
         
         if watched_shows:
-            # Convert to set to remove any duplicates
             watched_shows = list(set(watched_shows))
-            # Get min between 6 and total watched shows
             num_shows = min(6, len(watched_shows))
             if num_shows > 0:
-                # Randomly sample without replacement
                 random_indices = random.sample(watched_shows, num_shows)
                 watch_again = [(df.iloc[idx, -1], idx) for idx in random_indices]
         
