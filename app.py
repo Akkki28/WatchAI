@@ -290,6 +290,21 @@ def dashboard():
         session['selected_arms_contexts'] = [contexts[arm].tolist() for arm in top_arms]
         
         
+        
+        comedy_shows = df[df['Genre'].str.contains('Comedy', case=False, na=False)]
+        comedy_shows = comedy_shows.sort_values(by='Vote_Average', ascending=False).head(4)
+        top_comedy = [(row[-1], idx) for idx, row in comedy_shows.iterrows()]
+        
+        
+        romance_shows = df[df['Genre'].str.contains('Romance', case=False, na=False)]
+        romance_shows = romance_shows.sort_values(by='Vote_Average', ascending=False).head(4)
+        top_romance = [(row[-1], idx) for idx, row in romance_shows.iterrows()]
+        
+        
+        action_shows = df[df['Genre'].str.contains('Action', case=False, na=False)]
+        action_shows = action_shows.sort_values(by='Vote_Average', ascending=False).head(4)
+        top_action = [(row[-1], idx) for idx, row in action_shows.iterrows()]
+        
         save_A_b(A, b)
         
         return render_template('dashboard.html', 
@@ -297,11 +312,86 @@ def dashboard():
                             genres=genres, 
                             top_image_urls=top_image_urls,
                             watch_again=watch_again,
+                            top_comedy=top_comedy,
+                            top_romance=top_romance,
+                            top_action=top_action,
                             df=df)
     
     print("User not in session")
     return redirect('/login')
 
+
+
+@app.route('/watch_history')
+def watch_history():
+    if 'username' in session:
+        user = User.query.filter_by(username=session['username']).first()
+        if not user:
+            return redirect('/login')
+            
+        
+        watched_shows = json.loads(user.watched_shows)
+        
+        if not watched_shows:
+            
+            return render_template('watch_history.html', 
+                                watch_count=0,
+                                favorite_genre=None,
+                                avg_rating=None,
+                                watch_again=[],
+                                watch_dates=[],
+                                df=df)
+        
+        
+        watched_shows = list(set(watched_shows))  
+        watch_count = len(watched_shows)
+        
+        
+        
+        watch_dates = []
+        for _ in range(watch_count):
+            days_ago = random.randint(1, 60)
+            date = (pd.Timestamp.now() - pd.Timedelta(days=days_ago)).strftime('%b %d')
+            watch_dates.append(date)
+        
+        
+        genre_counts = {}
+        total_rating = 0
+        valid_ratings = 0
+        
+        for show_id in watched_shows:
+            if 0 <= show_id < len(df):
+                
+                if isinstance(df.iloc[show_id]['Genre'], str):
+                    genres = df.iloc[show_id]['Genre'].split(', ')
+                    for genre in genres:
+                        genre_counts[genre] = genre_counts.get(genre, 0) + 1
+                
+                
+                if 'Vote_Average' in df.columns and pd.notna(df.iloc[show_id]['Vote_Average']):
+                    total_rating += df.iloc[show_id]['Vote_Average']
+                    valid_ratings += 1
+        
+        
+        favorite_genre = max(genre_counts.items(), key=lambda x: x[1])[0] if genre_counts else 'N/A'
+        
+        
+        avg_rating = f"{(total_rating / valid_ratings):.1f}" if valid_ratings > 0 else 'N/A'
+        
+        
+        num_shows = min(12, len(watched_shows))
+        random_indices = random.sample(watched_shows, num_shows)
+        watch_again = [(df.iloc[idx, -1], idx) for idx in random_indices if 0 <= idx < len(df)]
+        
+        return render_template('watch_history.html', 
+                            watch_count=watch_count,
+                            favorite_genre=favorite_genre,
+                            avg_rating=avg_rating,
+                            watch_again=watch_again,
+                            watch_dates=watch_dates,
+                            df=df)
+    
+    return redirect('/login')
 
 @app.route('/remove_show', methods=['POST'])
 def remove_show():
@@ -362,6 +452,51 @@ def not_interested():
         session.pop('selected_arms_contexts', None)
 
         return redirect('/dashboard')
+    return redirect('/login')
+
+@app.route('/watch_show', methods=['POST'])
+def watch_show():
+    if 'username' in session:
+        show_id = int(request.form['show_id'])
+        show_title = request.form['show_title']
+        
+        
+        user = User.query.filter_by(username=session['username']).first()
+        watched_shows = json.loads(user.watched_shows)
+        watched_shows.append(show_id)
+        user.watched_shows = json.dumps(watched_shows)
+        db.session.commit()
+        session['watched_shows'] = watched_shows
+
+        
+        A, b = load_A_b()
+        selected_arms = session.get('selected_arms', [])
+        selected_arms_contexts = session.get('selected_arms_contexts', [])
+
+        try:
+            arm_index = selected_arms.index(show_id)
+            
+            if arm_index < len(selected_arms_contexts):
+                context = selected_arms_contexts[arm_index]
+                if context:
+                    x_a = np.array(context).reshape(-1, 1)
+                    A[show_id] += np.dot(x_a, x_a.T)
+                    b[show_id] += 1 * x_a  
+                    save_A_b(A, b)
+        except (ValueError, IndexError) as e:
+            print(f"Error updating matrices: {e}")
+            
+        
+        session.pop('selected_arms', None)
+        session.pop('selected_arms_contexts', None)
+
+        
+        import urllib.parse
+        encoded_title = urllib.parse.quote(show_title)
+        justwatch_url = f"https://www.justwatch.com/us/search?q={encoded_title}"
+        
+        return redirect(justwatch_url)
+    
     return redirect('/login')
 
 @app.route('/logout')

@@ -4,39 +4,65 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-sm-6 mt-4">
-        <h2>Register</h2>
-        <form action="/register" method="POST">
-            <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
+    <div class="col-md-8 col-lg-7 mt-5">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p class="text-muted">Join WatchAI to discover your next favorite shows</p>
             </div>
             
-            <div class="form-group">
-            <label for="pwd">Password:</label>
-            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password">
-            </div>
-
-            <div class="form-group">
-                <label for="genres">Preferred Genres:</label>
-                <div class="checkbox-container">
-                    {% for genre in [
-                        "Action", "Adventure", "Animation", "Comedy", "Crime",
-                        "Documentary", "Drama", "Family", "Fantasy", "History",
-                        "Horror", "Music", "Mystery", "Romance", "Science Fiction",
-                        "TV Movie", "Thriller", "War", "Western"
-                    ] %}
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="genres" value="{{ genre }}">
-                        <span class="checkmark"></span>
-                        {{ genre }}
-                    </label>
-                    {% endfor %}
+            <form action="/register" method="POST">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="username" placeholder="Choose a username" name="username" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pwd">Password</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                </div>
+                                <input type="password" class="form-control" id="pwd" placeholder="Create a password" name="password" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="genres">Preferred Genres</label>
+                            <div class="genre-container">
+                                {% for genre in [
+                                    "Action", "Adventure", "Animation", "Comedy", "Crime",
+                                    "Documentary", "Drama", "Family", "Fantasy", "History",
+                                    "Horror", "Music", "Mystery", "Romance", "Science Fiction",
+                                    "TV Movie", "Thriller", "War", "Western"
+                                ] %}
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" name="genres" value="{{ genre }}">
+                                    <span class="checkmark"></span>
+                                    <span class="genre-label">{{ genre }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <button type="submit" class="btn btn-dark">Register</button>
-        </form>
+                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="/login">Log in</a></p>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

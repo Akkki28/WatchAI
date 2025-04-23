@@ -3,47 +3,155 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-sm-8">
-        <h3>Top Recommendations:</h3>
-        <div class="row">
-            {% for image_url, show_id in top_image_urls %}
-                <div class="col-sm-4 mb-4">
-                    <form action="/remove_show" method="POST" onsubmit="showLoading(); return confirm('Do you want to watch this show?');">
+<div class="dashboard-container">
+    <div class="section-header">
+        <h3>Top Recommendations</h3>
+        <p>Based on your preferences</p>
+    </div>
+    
+    <div class="row">
+        {% for image_url, show_id in top_image_urls %}
+            <div class="col-sm-6 col-md-4 col-lg-4 mb-4">
+                <div class="show-card">
+                    <form action="/watch_show" method="POST" onsubmit="showLoading(); return confirm('Find where to watch this show?');">
                         <input type="hidden" name="show_id" value="{{ show_id }}">
-                        <button type="submit" style="border: none; background: none;">
-                            <img src="{{ image_url }}" alt="Recommended Show" class="img-fluid custom-img">
-                        </button>
-                        <h5 class="text-center mt-2">{{ df.iloc[show_id]['Title'] }}</h5>
+                        <input type="hidden" name="show_title" value="{{ df.iloc[show_id]['Title'] }}">
+                        <div class="show-image">
+                            <button type="submit" class="show-button">
+                                <img src="{{ image_url }}" alt="Recommended Show" class="img-fluid">
+                                <div class="show-overlay">
+                                    <div class="show-action">
+                                        <span class="action-icon"><i class="fas fa-play-circle"></i></span>
+                                        <span>Find Where to Watch</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="show-info">
+                            <h5>{{ df.iloc[show_id]['Title'] }}</h5>
+                        </div>
                     </form>
                 </div>
-            {% endfor %}
-        </div>
-        
-        {% if watch_again %}
-        <h3 class="mt-5">Watch Again:</h3>
-        <div class="row">
-            {% for image_url, show_id in watch_again %}
-                <div class="col-sm-4 mb-4">
-                    <form action="/remove_show" method="POST" onsubmit="showLoading(); return confirm('Do you want to watch this show again?');">
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="refresh-section text-center mt-4 mb-5">
+        <form action="/not_interested" method="POST" onsubmit="showLoading()">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="fas fa-sync-alt mr-2"></i> Show me different recommendations
+            </button>
+        </form>
+    </div>
+    
+    <div class="section-header mt-5">
+        <h3>Top Comedy Shows</h3>
+        <p>Highest-rated comedy content</p>
+    </div>
+    
+    <div class="row">
+        {% for image_url, show_id in top_comedy %}
+            <div class="col-sm-6 col-md-3 col-lg-3 mb-4">
+                <div class="show-card">
+                    <form action="/watch_show" method="POST" onsubmit="showLoading(); return confirm('Find where to watch this show?');">
                         <input type="hidden" name="show_id" value="{{ show_id }}">
-                        <button type="submit" style="border: none; background: none;">
-                            <img src="{{ image_url }}" alt="Watch Again Show" class="img-fluid custom-img">
-                        </button>
-                        <h5 class="text-center mt-2">{{ df.iloc[show_id]['Title'] }}</h5>
+                        <input type="hidden" name="show_title" value="{{ df.iloc[show_id]['Title'] }}">
+                        <div class="show-image">
+                            <div class="rank-badge">#{{ loop.index }}</div>
+                            <button type="submit" class="show-button">
+                                <img src="{{ image_url }}" alt="Comedy Show" class="img-fluid">
+                                <div class="show-overlay">
+                                    <div class="show-action">
+                                        <span class="action-icon"><i class="fas fa-play-circle"></i></span>
+                                        <span>Find Where to Watch</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="show-info">
+                            <h5>{{ df.iloc[show_id]['Title'] }}</h5>
+                            <div class="genre-rating">
+                                <span><i class="fas fa-star text-warning mr-1"></i>{{ df.iloc[show_id]['Vote_Average'] }}</span>
+                            </div>
+                        </div>
                     </form>
                 </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="section-header mt-5">
+        <h3>Top Romance Shows</h3>
+        <p>Highest-rated romance content</p>
+    </div>
+    
+    <div class="row">
+        {% for image_url, show_id in top_romance %}
+            <div class="col-sm-6 col-md-3 col-lg-3 mb-4">
+                <div class="show-card">
+                    <form action="/watch_show" method="POST" onsubmit="showLoading(); return confirm('Find where to watch this show?');">
+                        <input type="hidden" name="show_id" value="{{ show_id }}">
+                        <input type="hidden" name="show_title" value="{{ df.iloc[show_id]['Title'] }}">
+                        <div class="show-image">
+                            <div class="rank-badge">#{{ loop.index }}</div>
+                            <button type="submit" class="show-button">
+                                <img src="{{ image_url }}" alt="Romance Show" class="img-fluid">
+                                <div class="show-overlay">
+                                    <div class="show-action">
+                                        <span class="action-icon"><i class="fas fa-play-circle"></i></span>
+                                        <span>Find Where to Watch</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="show-info">
+                            <h5>{{ df.iloc[show_id]['Title'] }}</h5>
+                            <div class="genre-rating">
+                                <span><i class="fas fa-star text-warning mr-1"></i>{{ df.iloc[show_id]['Vote_Average'] }}</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="section-header mt-5">
+        <h3>Top Action Shows</h3>
+        <p>Highest-rated action content</p>
+    </div>
+    
+    <div class="row">
+        {% for image_url, show_id in top_action %}
+            <div class="col-sm-6 col-md-3 col-lg-3 mb-4">
+                <div class="show-card">
+                    <form action="/watch_show" method="POST" onsubmit="showLoading(); return confirm('Find where to watch this show?');">
+                        <input type="hidden" name="show_id" value="{{ show_id }}">
+                        <input type="hidden" name="show_title" value="{{ df.iloc[show_id]['Title'] }}">
+                        <div class="show-image">
+                            <div class="rank-badge">#{{ loop.index }}</div>
+                            <button type="submit" class="show-button">
+                                <img src="{{ image_url }}" alt="Action Show" class="img-fluid">
+                                <div class="show-overlay">
+                                    <div class="show-action">
+                                        <span class="action-icon"><i class="fas fa-play-circle"></i></span>
+                                        <span>Find Where to Watch</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="show-info">
+                            <h5>{{ df.iloc[show_id]['Title'] }}</h5>
+                            <div class="genre-rating">
+                                <span><i class="fas fa-star text-warning mr-1"></i>{{ df.iloc[show_id]['Vote_Average'] }}</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 </div>
 
-<div class="row justify-content-center mt-3">
-    <div class="col-sm-8 text-center">
-        <form action="/not_interested" method="POST" onsubmit="showLoading()">
-            <button type="submit" class="btn btn-danger">Not Interested?</button>
-        </form>
-    </div>
-</div>
+
 {% endblock %}

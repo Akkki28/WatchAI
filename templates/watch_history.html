@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Watch History{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="page-header">
+        <div>
+            <h2 class="page-title">Your Watch History</h2>
+            <p class="text-muted">Shows and movies you've watched</p>
+        </div>
+    </div>
+    
+    <div class="history-stats mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-value">{{ watch_count if watch_count else 0 }}</div>
+                    <div class="stat-label">Shows Watched</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-value">{{ favorite_genre if favorite_genre else 'N/A' }}</div>
+                    <div class="stat-label">Favorite Genre</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-value">{{ avg_rating if avg_rating else 'N/A' }}</div>
+                    <div class="stat-label">Avg. Rating</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if watch_again %}
+    <div class="watched-content">
+        <div class="row">
+            {% for image_url, show_id in watch_again %}
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="history-card">
+                        <div class="history-image">
+                            <img src="{{ image_url }}" alt="Watch Again Show" class="img-fluid">
+                            <div class="history-date">
+                                Watched on {{ watch_dates[loop.index0] if watch_dates else 'Unknown' }}
+                            </div>
+                            <!-- Overlay and action buttons removed -->
+                        </div>
+                        <div class="history-info">
+                            <h5>{{ df.iloc[show_id]['Title'] }}</h5>
+                            <div class="history-meta">
+                                <span class="meta-item">
+                                    <i class="fas fa-film"></i> {{ df.iloc[show_id]['Type'] if 'Type' in df.columns and df.iloc[show_id]['Type'] is not none else 'Movie' }}
+                                </span>
+                                <span class="meta-item">
+                                    <i class="fas fa-star"></i> {{ df.iloc[show_id]['Vote_Average'] if 'Vote_Average' in df.columns and df.iloc[show_id]['Vote_Average'] is not none else 'N/A' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-history">
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-history"></i>
+            </div>
+            <h3>No Watch History</h3>
+            <p>You haven't watched any shows or movies yet.</p>
+            <a href="/dashboard" class="btn btn-primary mt-3">
+                <i class="fas fa-th-large mr-2"></i> Explore Recommendations
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

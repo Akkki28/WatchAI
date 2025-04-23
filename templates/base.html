@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>{% block title %}{% endblock %} | WatchAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/">
-                Watch<span style="color: var(--secondary)">AI</span>
+                Watch<span class="brand-highlight">AI</span>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -23,17 +24,31 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" 
                            href="/dashboard" 
-                           onclick="showLoading()">Dashboard</a>
+                           onclick="showLoading()">
+                           <i class="fas fa-th-large mr-1"></i> Dashboard
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">Logout</a>
+                        <a class="nav-link {% if request.endpoint == 'watch_history' %}active{% endif %}" 
+                           href="/watch_history">
+                           <i class="fas fa-history mr-1"></i> Watch History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                        </a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'login' %}active{% endif %}" href="/login">Login</a>
+                        <a class="nav-link {% if request.endpoint == 'login' %}active{% endif %}" href="/login">
+                            <i class="fas fa-sign-in-alt mr-1"></i> Login
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'register' %}active{% endif %}" href="/register">Sign Up</a>
+                        <a class="nav-link {% if request.endpoint == 'register' %}active{% endif %}" href="/register">
+                            <i class="fas fa-user-plus mr-1"></i> Sign Up
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
@@ -41,12 +56,29 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container main-container">
         {% block content %}{% endblock %}
     </div>
 
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Watch<span class="brand-highlight">AI</span></h4>
+                    <p>Your personal AI-powered movie and show recommendation platform</p>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <p>&copy; 2025 WatchAI. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>Loading recommendations...</p>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -62,14 +94,16 @@
         document.getElementById('loadingOverlay').style.display = 'none';
     }
 
-    document.addEventListener('click', function(e) {
-        if (e.target.tagName === 'A' || 
-            (e.target.tagName === 'BUTTON' && e.target.type === 'submit')) {
-            showLoading();
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+        hideLoading();
+        
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && !e.target.hasAttribute('data-no-loading') || 
+                (e.target.tagName === 'BUTTON' && e.target.type === 'submit')) {
+                showLoading();
+            }
+        });
     });
-
-    window.addEventListener('load', hideLoading);
     </script>
 </body>
 </html>
